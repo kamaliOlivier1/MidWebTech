@@ -1,60 +1,62 @@
 
 package DAO;
 
+
+
 import java.util.List;
-import MODEL.CourseDefinition;
+import MODEL.Course;
 import org.hibernate.Session;
 
-public class CourseDefinitionDao {
-        public CourseDefinition createCourseDefinition(CourseDefinition courseDefinition){
+public class CourseDao {
+     public Course createCourse(Course course){
         try {
             Session ss = HibernateUtil.getSessionFactory().openSession();
-            ss.save(courseDefinition);
+            ss.save(course);
             ss.beginTransaction().commit();
-            return courseDefinition;
+            return course;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
         }
-    public CourseDefinition updateCourseDefinition(CourseDefinition courseDefinition) {
+    public Course updateCourse(Course course) {
         try {
             Session ss = HibernateUtil.getSessionFactory().openSession();
-            ss.update(courseDefinition);
+            ss.update(course);
             ss.beginTransaction().commit();
-            return courseDefinition;
+            return course;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    public CourseDefinition DeleteCourseDefinition(CourseDefinition courseDefinition) {
+    public Course DeleteCourse(Course course) {
         try {
             Session ss = HibernateUtil.getSessionFactory().openSession();
-            ss.delete(courseDefinition);
+            ss.delete(course);
             ss.beginTransaction().commit();
-            return courseDefinition;
+            return course;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    public CourseDefinition findCourseDefinitionById(CourseDefinition courseDefinition) {
+    public Course findCourseById(Course course) {
         try {
             Session ss = HibernateUtil.getSessionFactory().openSession();
-            CourseDefinition theCourseDefinition =(CourseDefinition)ss.get(CourseDefinition.class, courseDefinition.getId());
-            return theCourseDefinition;
+            Course theCourse =(Course)ss.get(Course.class, course.getId());
+            return theCourse;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    public List<CourseDefinition> getAllCourseDefinitions() {
+    public List<Course> getAllCourses() {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
-            List<CourseDefinition> courseDefinitions = session.createQuery("FROM CourseDefinition").list();
+            List<Course> courses = session.createQuery("FROM Course").list();
             session.close(); 
-            return courseDefinitions;
+            return courses;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,70 +1,64 @@
 package DAO;
 
-import MODEL.StudentRegistration;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
 import java.util.List;
+import MODEL.StudentRegistration;
+import org.hibernate.Session;
+
 
 public class StudentRegistrationDao {
-
-    private EntityManager entityManager;
-
-    public StudentRegistrationDao(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public void saveStudentRegistration(StudentRegistration studentRegistration) {
-        EntityTransaction transaction = entityManager.getTransaction();
+     public StudentRegistration createStudentRegistration(StudentRegistration stregistration){
         try {
-            transaction.begin();
-            entityManager.persist(studentRegistration);
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.save(stregistration);
+            ss.beginTransaction().commit();
+            return stregistration;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
         }
-    }
-
-    public StudentRegistration getStudentRegistrationById(int id) {
-        return entityManager.find(StudentRegistration.class, id);
-    }
-
-    public void updateStudentRegistration(StudentRegistration studentRegistration) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        return null;
+        }
+    public StudentRegistration updateStudentRegistration(StudentRegistration stregistration) {
         try {
-            transaction.begin();
-            entityManager.merge(studentRegistration);
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.update(stregistration);
+            ss.beginTransaction().commit();
+            return stregistration;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
         }
+        return null;
     }
-
-    public void deleteStudentRegistration(int id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public StudentRegistration DeleteStudentRegistration(StudentRegistration stregistration) {
         try {
-            transaction.begin();
-            StudentRegistration studentRegistration = entityManager.find(StudentRegistration.class, id);
-            if (studentRegistration != null) {
-                entityManager.remove(studentRegistration);
-            }
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.delete(stregistration);
+            ss.beginTransaction().commit();
+            return stregistration;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
         }
+        return null;
+    }
+    public StudentRegistration findStudentRegistrationById(StudentRegistration stregistration) {
+        try {
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            StudentRegistration theStudentRegistration =(StudentRegistration)ss.get(StudentRegistration.class, stregistration.getRegistrationId());
+            return theStudentRegistration;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public List<StudentRegistration> getAllStudentRegistrations() {
+        try {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            List<StudentRegistration> stregistrations = session.createQuery("FROM StudentRegistration").list();
+            session.close(); 
+            return stregistrations;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public List<StudentRegistration> findAllStudentRegistrations() {
-        TypedQuery<StudentRegistration> query = entityManager.createQuery("SELECT sr FROM StudentRegistration sr", StudentRegistration.class);
-        return query.getResultList();
-    }
 }

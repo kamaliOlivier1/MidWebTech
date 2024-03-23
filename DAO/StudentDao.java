@@ -1,70 +1,51 @@
 package DAO;
 
 import MODEL.Student;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import org.hibernate.Session;
+
 import java.util.List;
 
 public class StudentDao {
 
-    private EntityManager entityManager;
-
-    public StudentDao(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    public void saveStudent(Student student) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public Student createStudent(Student student) {
         try {
-            transaction.begin();
-            entityManager.persist(student);
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.beginTransaction();
+            ss.save(student);
+            ss.getTransaction().commit();
+            ss.close();
+            return student;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
+            return null;
         }
     }
 
-    public Student getStudentById(int id) {
-        return entityManager.find(Student.class, id);
-    }
-
-    public void updateStudent(Student student) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public boolean updateStudent(Student student) {
         try {
-            transaction.begin();
-            entityManager.merge(student);
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.beginTransaction();
+            ss.update(student);
+            ss.getTransaction().commit();
+            ss.close();
+            return true;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void deleteStudent(int id) {
-        EntityTransaction transaction = entityManager.getTransaction();
+    public boolean deleteStudent(Student student) {
         try {
-            transaction.begin();
-            Student student = entityManager.find(Student.class, id);
-            if (student != null) {
-                entityManager.remove(student);
-            }
-            transaction.commit();
+            Session ss = HibernateUtil.getSessionFactory().openSession();
+            ss.beginTransaction();
+            ss.delete(student);
+            ss.getTransaction().commit();
+            ss.close();
+            return true;
         } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             e.printStackTrace();
+            return false;
         }
-    }
-
-    public List<Student> findAllStudents() {
-        TypedQuery<Student> query = entityManager.createQuery("SELECT s FROM Student s", Student.class);
-        return query.getResultList();
     }
 }

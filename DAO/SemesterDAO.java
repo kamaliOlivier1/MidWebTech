@@ -3,10 +3,7 @@ package DAO;
 import MODEL.Semester;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import DAO.HibernateUtil;
-
 import java.util.List;
-import java.util.UUID;
 import org.hibernate.Query;
 
 public class SemesterDAO {
@@ -16,7 +13,7 @@ public class SemesterDAO {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
-            session.save(semester);
+            session.saveOrUpdate(semester); // Use saveOrUpdate instead of save
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -26,7 +23,7 @@ public class SemesterDAO {
         }
     }
 
-    public Semester getSemesterById(UUID semesterId) {
+    public Semester getSemesterById(Long semesterId) { // Changed parameter type to Long
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             return (Semester) session.get(Semester.class, semesterId);
@@ -47,7 +44,7 @@ public class SemesterDAO {
         }
     }
 
-    public void deleteSemester(UUID semesterId) {
+    public void deleteSemester(Long semesterId) { // Changed parameter type to Long
         Transaction transaction = null;
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
