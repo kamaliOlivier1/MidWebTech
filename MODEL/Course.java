@@ -1,20 +1,18 @@
 package MODEL;
-import MODEL.AcademicUnit;
-import MODEL.Semester;
 
+import java.io.Serializable;
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "course")
-public class Course {
+@Table(name = "courses")
+public class Course implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "course_id")
-    private UUID courseId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Column(name = "course_code")
     private String courseCode;
@@ -22,39 +20,44 @@ public class Course {
     @Column(name = "course_name")
     private String courseName;
 
-    @ManyToOne
-    @JoinColumn(name = "academic_id", referencedColumnName = "academic_id")
-    private AcademicUnit academicUnit;
-
-    @ManyToOne
-    @JoinColumn(name = "semester_id", referencedColumnName = "semester_id")
+    @OneToOne
+    @JoinColumn(name = "semester_id")
     private Semester semester;
 
-    @ManyToMany
-    @JoinTable(
-        name = "course_teacher",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "teacher_id")
-    )
-    private Set<Teacher> teachers = new HashSet<>();
+    @OneToOne
+    @JoinColumn(name = "department_id")
+    private AcademicUnit department;
+
+    @OneToOne(mappedBy = "course")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private CourseDefinition courseDefinition;
+    
+    @OneToOne(mappedBy = "course")
+    private Teacher teacher;
 
     public Course() {
     }
 
-    public Course(UUID courseId, String courseCode, String courseName, AcademicUnit academicUnit, Semester semester) {
-        this.courseId = courseId;
+    public Course(Long id, String courseCode, String courseName, Semester semester, AcademicUnit department, CourseDefinition courseDefinition, Teacher teacher) {
+        this.id = id;
         this.courseCode = courseCode;
         this.courseName = courseName;
-        this.academicUnit = academicUnit;
         this.semester = semester;
+        this.department = department;
+        this.courseDefinition = courseDefinition;
+        this.teacher = teacher;
     }
 
-    public UUID getCourseId() {
-        return courseId;
+    public Course(Long courseId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void setCourseId(UUID courseId) {
-        this.courseId = courseId;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCourseCode() {
@@ -73,14 +76,6 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public AcademicUnit getAcademicUnit() {
-        return academicUnit;
-    }
-
-    public void setAcademicUnit(AcademicUnit academicUnit) {
-        this.academicUnit = academicUnit;
-    }
-
     public Semester getSemester() {
         return semester;
     }
@@ -89,12 +84,27 @@ public class Course {
         this.semester = semester;
     }
 
-    public Set<Teacher> getTeachers() {
-        return teachers;
+    public AcademicUnit getDepartment() {
+        return department;
     }
 
-    public void setTeachers(Set<Teacher> teachers) {
-        this.teachers = teachers;
+    public void setDepartment(AcademicUnit department) {
+        this.department = department;
     }
 
+    public CourseDefinition getCourseDefinition() {
+        return courseDefinition;
+    }
+
+    public void setCourseDefinition(CourseDefinition courseDefinition) {
+        this.courseDefinition = courseDefinition;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }

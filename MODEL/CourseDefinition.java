@@ -1,61 +1,58 @@
 package MODEL;
 
-import MODEL.Course;
-import java.util.UUID;
-
+import java.io.Serializable;
 import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "course_definition")
-public class CourseDefinition {
-
+@Table(name="course_definition")
+public class CourseDefinition implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "course_definition_id")
-    private UUID courseDefinitionId;
+    private Long Id;
 
-    @Column(name = "course_definition_code")
-    private String courseDefinitionCode;
-
-    @Column(name = "course_definition_description")
-    private String courseDefinitionDescription;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", referencedColumnName = "course_id")
-    private Course course;
+    @Column(name ="course_definition_description")
+    private String description ;
+    
+    @OneToOne
+    @JoinColumn(name = "course_id")
+    private Course course; 
 
     public CourseDefinition() {
     }
 
-    public UUID getCourseDefinitionId() {
-      return courseDefinitionId;
+    public CourseDefinition(Long Id, String description, Course course) {
+        this.Id = Id;
+        this.description = description;
+        this.course = course;
     }
 
-    public void setCourseDefinitionId(UUID courseDefinitionId) {
-      this.courseDefinitionId = courseDefinitionId;
+    public Long getId() {
+        return Id;
     }
 
-    public String getCourseDefinitionCode() {
-      return courseDefinitionCode;
+    public void setId(Long Id) {
+        this.Id = Id;
     }
 
-    public void setCourseDefinitionCode(String courseDefinitionCode) {
-      this.courseDefinitionCode = courseDefinitionCode;
+    public String getDescription() {
+        return description;
     }
 
-    public String getCourseDefinitionDescription() {
-      return courseDefinitionDescription;
-    }
-
-    public void setCourseDefinitionDescription(String courseDefinitionDescription) {
-      this.courseDefinitionDescription = courseDefinitionDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Course getCourse() {
-      return course;
+        return course;
     }
 
     public void setCourse(Course course) {
-      this.course = course;
+        this.course = course;
     }
+    
 }

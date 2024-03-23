@@ -1,65 +1,81 @@
 package MODEL;
-import java.time.LocalDate;
-import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.Date;
-import java.util.UUID;
+import java.util.List;
+import javax.persistence.*;
+
+
 @Entity
-@Table(name = "semester")
-public class Semester {
+public class Semester implements Serializable {
 
     @Id
-    @Column(name = "semester_id", updatable = false, nullable = false)
-    private UUID semesterId;
+    @Column(name = "semester")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long semesterId;
 
-    @Column(name = "semester_name")
+    @Column(name = "semester_Name")
     private String semesterName;
 
     @Column(name = "starting_date")
-    private LocalDate startingDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startingDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endDate;
+    
 
     public Semester() {
     }
 
-    public Semester(UUID semesterId, String semesterName, LocalDate startingDate, LocalDate endDate) {
-      this.semesterId = semesterId;
-      this.semesterName = semesterName;
-      this.startingDate = startingDate;
-      this.endDate = endDate;
+    public Semester(Long semesterId, String semesterName, Date startingDate, Date endDate) {
+        this.semesterId = semesterId;
+        this.semesterName = semesterName;
+        this.startingDate = startingDate;
+        this.endDate = endDate;
     }
 
-    public UUID getSemesterId() {
-      return semesterId;
+    public Semester(String semesterName, Date startingDate, Date endDate) {
+        this.semesterName = semesterName;
+        this.startingDate = startingDate;
+        this.endDate = endDate;
     }
 
-    public void setSemesterId(UUID semesterId) {
-      this.semesterId = semesterId;
+    public Semester(Long semesterId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Long getSemesterId() {
+        return semesterId;
+    }
+
+    public void setSemesterId(Long semesterId) {
+        this.semesterId = semesterId;
     }
 
     public String getSemesterName() {
-      return semesterName;
+        return semesterName;
     }
 
     public void setSemesterName(String semesterName) {
-      this.semesterName = semesterName;
+        this.semesterName = semesterName;
     }
 
-    public LocalDate getStartingDate() {
-      return startingDate;
+    public Date getStartingDate() {
+        return startingDate;
     }
 
-    public void setStartingDate(LocalDate startingDate) {
-      this.startingDate = startingDate;
+    public void setStartingDate(Date startingDate) {
+        this.startingDate = startingDate;
     }
 
-    public LocalDate getEndDate() {
-      return endDate;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-      this.endDate = endDate;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
-    
+
 }

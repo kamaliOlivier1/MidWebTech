@@ -1,73 +1,51 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package MODEL;
 
-
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import javax.persistence.*;
+
 
 @Entity
 @Table(name = "studentRegistration")
-public class StudentRegistration {
-
+public class StudentRegistration implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "registration_id")
-    private UUID registrationId;
-
-    @Column(name = "registration_code")
-    private String registrationCode;
-
+    private Long registrationId;
+    
     @Column(name = "registration_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
-
+    
     @ManyToOne
-    @JoinColumn(name = "academic_id", referencedColumnName = "academic_id")
-    private AcademicUnit academicUnit;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "student_id")
+    @JoinColumn(name = "student_id")
     private Student student;
-
+    
     @ManyToOne
-    @JoinColumn(name = "semester_id", referencedColumnName = "semester_id")
+    @JoinColumn(name = "semester_id")
     private Semester semester;
-
-    @OneToMany(mappedBy = "studentRegistration")
-    private Set<StudentCourse> studentCourses = new HashSet<>();
+        
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private AcademicUnit department;
 
     public StudentRegistration() {
     }
 
-    public StudentRegistration(UUID registrationId, String registrationCode, Date registrationDate, AcademicUnit academicUnit, Student student, Semester semester) {
+    public StudentRegistration(Long registrationId, Date registrationDate, Student student, Semester semester, AcademicUnit department) {
         this.registrationId = registrationId;
-        this.registrationCode = registrationCode;
         this.registrationDate = registrationDate;
-        this.academicUnit = academicUnit;
         this.student = student;
         this.semester = semester;
+        this.department = department;
     }
 
-    public UUID getRegistrationId() {
+    public Long getRegistrationId() {
         return registrationId;
     }
 
-    public void setRegistrationId(UUID registrationId) {
+    public void setRegistrationId(Long registrationId) {
         this.registrationId = registrationId;
-    }
-
-    public String getRegistrationCode() {
-        return registrationCode;
-    }
-
-    public void setRegistrationCode(String registrationCode) {
-        this.registrationCode = registrationCode;
     }
 
     public Date getRegistrationDate() {
@@ -76,14 +54,6 @@ public class StudentRegistration {
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
-    }
-
-    public AcademicUnit getAcademicUnit() {
-        return academicUnit;
-    }
-
-    public void setAcademicUnit(AcademicUnit academicUnit) {
-        this.academicUnit = academicUnit;
     }
 
     public Student getStudent() {
@@ -102,13 +72,13 @@ public class StudentRegistration {
         this.semester = semester;
     }
 
-    public Set<StudentCourse> getStudentCourses() {
-        return studentCourses;
+    public AcademicUnit getDepartment() {
+        return department;
     }
 
-    public void setStudentCourses(Set<StudentCourse> studentCourses) {
-        this.studentCourses = studentCourses;
+    public void setDepartment(AcademicUnit department) {
+        this.department = department;
     }
-
-    // Add helper methods to manage student courses if necessary
+    
+    
 }
